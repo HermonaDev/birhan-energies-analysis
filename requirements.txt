@@ -1,0 +1,11 @@
+pandas
+numpy
+matplotlib
+seaborn
+statsmodels
+pymc>=5.0.0
+pytensor
+flask
+flask-cors
+pytest
+flake8

@@ -1,0 +1,7 @@
+data/*.csv
+.venv/
+__pycache__/
+.vscode/
+.env
+node_modules/
+dist/
