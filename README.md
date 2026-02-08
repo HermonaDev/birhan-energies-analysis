@@ -4,6 +4,10 @@
 ## 📌 Project Overview
 This project analyzes structural breaks in Brent Crude Oil prices (1987-2022). Using Bayesian Inference (PyMC), we detect "Change Points" where market regimes shifted due to geopolitical and economic shocks, providing Birhan Energies with actionable intelligence on price volatility.
 
+## 📁 Project Documentation
+*   [Technical Workflow & Assumptions](./analysis_plan.md): Detailed look at stationarity, causality, and stakeholder communication.
+*   [Events Dataset](./data/external_events.csv): 15 global shocks used for model validation.
+
 ## 🛠️ Repository Structure
 - `data/`: Raw Brent Oil prices and researched external events CSV.
 - `src/`: Data loading, statistical profiling (ADF tests), and Bayesian modeling.
