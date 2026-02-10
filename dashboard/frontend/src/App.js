@@ -4,81 +4,77 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 const App = () => {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [analysis, setAnalysis] = useState({});
   const [events, setEvents] = useState([]);
-
-  // Forced API path
-  const API = "http://127.0.0.1:5000/api";
+  const [highlightDate, setHighlightDate] = useState(null);
+  const [startDate, setStartDate] = useState('2005-01-01');
 
   useEffect(() => {
-    // Prices
-    axios.get(`${API}/prices`).then(res => setData(res.data));
-    
-    // Analysis
-    axios.get(`${API}/analysis`).then(res => {
-        console.log("Analysis Received:", res.data);
-        setAnalysis(res.data);
+    const URL = "http://127.0.0.1:5000/api";
+    axios.get(`${URL}/prices`).then(res => {
+      setData(res.data);
+      setFilteredData(res.data.filter(d => d.Date >= startDate));
     });
-
-    // Events
-    axios.get(`${API}/events`).then(res => {
-        console.log("Events Received:", res.data);
-        setEvents(res.data);
-    });
-  }, []);
+    axios.get(`${URL}/analysis`).then(res => setAnalysis(res.data));
+    axios.get(`${URL}/events`).then(res => setEvents(res.data));
+  }, [startDate]);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', backgroundColor: '#f1f5f9', fontFamily: 'sans-serif' }}>
-      
-      {/* SIDEBAR */}
-      <aside style={{ width: '320px', backgroundColor: '#0f172a', color: 'white', padding: '25px', overflowY: 'auto' }}>
-        <h2 style={{ fontSize: '20px', color: '#3b82f6', borderBottom: '1px solid #1e293b', paddingBottom: '15px' }}>GLOBAL EVENTS</h2>
-        {events.length > 0 ? events.map((e, i) => (
-          <div key={i} style={{ marginBottom: '15px', padding: '12px', backgroundColor: '#1e293b', borderRadius: '8px', borderLeft: '4px solid #3b82f6' }}>
-            <small style={{ color: '#94a3b8' }}>{e.Date}</small>
-            <div style={{ fontSize: '13px', marginTop: '4px', color: '#f8fafc' }}>{e.Event}</div>
-          </div>
-        )) : <p>Loading events...</p>}
+    <div style={styles.layout}>
+      {/* SIDEBAR with Click-to-Highlight */}
+      <aside style={styles.sidebar}>
+        <h2 style={styles.sidebarTitle}>EVENT DRILL-DOWN</h2>
+        <p style={styles.sidebarHint}>Click an event to highlight on chart</p>
+        <div style={styles.list}>
+          {events.map((e, i) => (
+            <div key={i} style={styles.card} onClick={() => setHighlightDate(e.Date)}>
+              <small style={{color: '#3b82f6'}}>{e.Date}</small>
+              <div style={{fontSize: '13px'}}>{e.Event}</div>
+            </div>
+          ))}
+        </div>
       </aside>
 
-      {/* MAIN CONTENT */}
-      <main style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
-        <div style={{ marginBottom: '40px' }}>
-          <h1 style={{ color: '#1e293b', margin: 0, fontSize: '32px' }}>Brent Oil Intelligence</h1>
-          <p style={{ color: '#64748b' }}>Structural Break: <b>{analysis.date}</b></p>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '25px', marginBottom: '40px' }}>
-          <div style={cardStyle}>
-            <span style={labelStyle}>PRICE SHIFT</span>
-            <h2 style={{ color: '#10b981', margin: '10px 0', fontSize: '36px' }}>{analysis.price_shift || "---"}</h2>
-            <small style={{ color: '#94a3b8' }}>$\mu$: ${analysis.mu1} → ${analysis.mu2}</small>
+      <main style={styles.main}>
+        <header style={styles.header}>
+          <h1>Birhan Energies Intelligence</h1>
+          {/* USER CONTROL: Date Filter */}
+          <div style={styles.control}>
+            <label>Start Date: </label>
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           </div>
-          <div style={cardStyle}>
-            <span style={labelStyle}>RISK DELTA (VOLATILITY)</span>
-            <h2 style={{ color: '#f59e0b', margin: '10px 0', fontSize: '36px' }}>{analysis.risk_delta || "---"}</h2>
-            <small style={{ color: '#94a3b8' }}>Bayesian Convergence: R-hat 1.0</small>
-          </div>
-        </div>
+        </header>
 
-        <div style={{ height: '450px', backgroundColor: 'white', padding: '30px', borderRadius: '15px', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}>
+        <section style={styles.chartBox}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+            <LineChart data={filteredData}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="Date" hide={true} />
-              <YAxis domain={['auto', 'auto']} stroke="#94a3b8" />
+              <YAxis domain={['auto', 'auto']} />
               <Tooltip />
-              <Line type="monotone" dataKey="Price" stroke="#2563eb" dot={false} strokeWidth={3} isAnimationActive={false} />
-              <ReferenceLine x={analysis.date} stroke="#ef4444" strokeWidth={3} strokeDasharray="8 8" label={{ value: 'SHIFT', position: 'top', fill: '#ef4444', fontWeight: 'bold' }} />
+              <Line type="monotone" dataKey="Price" stroke="#2563eb" dot={false} isAnimationActive={false} />
+              {/* Event Highlighting */}
+              {highlightDate && <ReferenceLine x={highlightDate} stroke="orange" label="SELECTED EVENT" strokeWidth={2}/>}
+              <ReferenceLine x={analysis.date} stroke="red" label="BAYESIAN BREAK" strokeDasharray="5 5" />
             </LineChart>
           </ResponsiveContainer>
-        </div>
+        </section>
       </main>
     </div>
   );
 };
 
-const cardStyle = { backgroundColor: 'white', padding: '30px', borderRadius: '15px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', border: '1px solid #e2e8f0' };
-const labelStyle = { fontSize: '12px', color: '#64748b', fontWeight: 'bold', letterSpacing: '1.5px' };
+const styles = {
+  layout: { display: 'flex', height: '100vh', fontFamily: 'Inter, sans-serif' },
+  sidebar: { width: '300px', backgroundColor: '#0f172a', color: 'white', padding: '20px', overflowY: 'auto' },
+  sidebarTitle: { color: '#3b82f6', borderBottom: '1px solid #1e293b', paddingBottom: '10px' },
+  sidebarHint: { fontSize: '11px', color: '#64748b' },
+  card: { padding: '10px', backgroundColor: '#1e293b', borderRadius: '6px', marginBottom: '10px', cursor: 'pointer' },
+  main: { flex: 1, padding: '30px', backgroundColor: '#f8fafc' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
+  chartBox: { height: '500px', backgroundColor: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' },
+  control: { backgroundColor: 'white', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }
+};
 
 export default App;
