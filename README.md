@@ -1,36 +1,67 @@
-# Brent Oil Price - Bayesian Change Point Analysis
-**Birhan Energies | Data Science Workflow**
+# Brent Oil Change Point Analysis Intelligence Platform
+**Birhan Energies | Quantitative Unit**
 
-## 📌 Project Overview
-This project analyzes structural breaks in Brent Crude Oil prices (1987-2022). Using Bayesian Inference (PyMC), we detect "Change Points" where market regimes shifted due to geopolitical and economic shocks, providing Birhan Energies with actionable intelligence on price volatility.
+## 📌 Executive Summary
+This platform provides a robust statistical framework for identifying structural breaks in global Brent Oil prices. By combining **Bayesian Inference (PyMC)** with a **Full-stack Interactive Dashboard**, we empower stakeholders to differentiate between market volatility and permanent regime shifts driven by geopolitical shocks.
 
-## 📁 Project Documentation
-*   [Technical Workflow & Assumptions](./analysis_plan.md): Detailed look at stationarity, causality, and stakeholder communication.
-*   [Events Dataset](./data/external_events.csv): 15 global shocks used for model validation.
+# 📊 Dashboard Preview
+![Dashboard Preview](./reports/dashboard.png)
+*Figure 1: Interactive Intelligence Dashboard showing the 2010 structural break associated with the Arab Spring.*
 
-## 🛠️ Repository Structure
-- `data/`: Raw Brent Oil prices and researched external events CSV.
-- `src/`: Data loading, statistical profiling (ADF tests), and Bayesian modeling.
-- `notebooks/`: Visualization outputs and statistical reports.
-- `reports/`: Documented analysis plan and methodology.
+## 🛠️ Tech Stack & Rigor
+- **Backend:** Flask (Python) with RESTful API architecture.
+- **Frontend:** React.js, Recharts, and Axios for real-time visualization.
+- **Modeling:** PyMC (Bayesian MCMC), NUTS Sampler, Arviz for convergence diagnostics.
+- **Data Engineering:** Automated standardization of 35 years of mixed-format data.
 
-## 📈 Key Findings (Task 1 & 2)
-### 1. Data Stationarity
-- **Raw Price:** Non-stationary (ADF p-value: 0.29).
-- **Log Returns:** Stationary (ADF p-value: 2.5e-29).
-- **Inference:** Modeling structural breaks on mean price levels requires piecewise regression to handle non-stationarity.
+## 📁 Repository Structure
+```text
+├── data/
+│   ├── BrentOilPrices.csv      # Historical Raw Data (1987-2022)
+│   ├── external_events.csv     # Curated 15-event Geopolitical Ground Truth
+├── src/
+│   ├── data_loader.py          # Automated cleaning & standardization
+│   ├── eda_profiler.py         # Stationarity & ADF Validation
+│   ├── change_point_model.py   # Bayesian MCMC Model implementation
+│   ├── event_analysis.py       # Impact quantification logic
+├── dashboard/
+│   ├── backend/                # Flask REST API
+│   ├── frontend/               # React Intelligence Dashboard
+├── ANALYSIS_REPORT.md          # Technical workflow & assumptions
+└── README.md                   # Documentation (You are here)
+```
 
-### 2. Bayesian Model Discovery
-- **Detected Change Point:** 2010-12-16.
-- **Event Association:** Closely linked to the onset of the **Libyan Civil War / Arab Spring**.
-- **Regime Shift Impact:**
-    - **Price Level:** Shifted from ~$81.70 to ~$107.22 (+31.23%).
-    - **Volatility (Risk):** Increased by +116.42%.
-- **Model Convergence:** Sampling achieved an **R-hat of 1.0**, indicating high reliability.
+## 🚀 Installation & Usage
 
-## 🚀 Setup and Installation
-1. Clone the repository.
-2. Create virtual environment: `python3 -m venv .venv && source .venv/bin/activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Run EDA: `python3 src/eda_profiler.py`
-5. Run Bayesian Model: `python3 src/change_point_model.py`
+### 1. Environment Setup
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Start Backend (Terminal 1)
+```bash
+cd dashboard/backend
+python3 main.py
+```
+
+### 3. Start Frontend (Terminal 2)
+```bash
+cd dashboard/frontend
+npm install
+npm start
+```
+
+## 📈 Key Insights (MCMC Results)
+- **Primary Change Point:** 2010-12-16 (onset of Arab Spring).
+- **Regime Impact:** Mean price increased by **+31.23%**, while market risk (volatility) expanded by **+116.42%**.
+- **Model Reliability:** Sampling achieved an **R-hat of 1.0**, indicating full convergence.
+
+## 📁 Technical Roadmap
+1. **Data Profiling:** Transformation to Log Returns for stationarity (p < 0.05).
+2. **Bayesian Modeling:** Discrete Uniform priors for switch point detection.
+3. **Quantification:** Rolling window analysis (90 days) for regime impact scaling.
+```
+
+-
