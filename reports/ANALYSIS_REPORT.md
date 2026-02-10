@@ -1,24 +1,12 @@
-# Birhan Energies: Technical Analysis Framework
+# Birhan Energies: Strategic Framework
 
-## 1. Assumptions & Limitations
-### Technical Assumptions
-*   **Stationarity:** We assume that while raw prices are non-stationary, Log Returns provide a stable variance for Bayesian Switch-point modeling.
-*   **Likelihood:** We assume a Normal distribution for prices within a regime. Future iterations may test Student-T distributions to better handle "fat-tail" price shocks.
+## 1. Event Dataset & Workflow Attribution
+This analysis is anchored by the `data/external_events.csv` artifact, containing 15 high-impact geopolitical shocks. These events are used in the `Master_Analysis.ipynb` notebook to validate Bayesian Change Point detection results.
 
-### Correlation vs. Causality
-*   **Association:** Our model identifies statistical "Change Points" where the price distribution shifts. While these often align with geopolitical events (e.g., Arab Spring), the model identifies *correlation* in time.
-*   **Causal Limitation:** We acknowledge that Brent prices are influenced by a web of factors (USD strength, interest rates, inventory levels). We define events as "Associated Triggers" rather than isolated causes.
+## 2. Assumptions & Limitations
+*   **Stationarity:** We assume Log Returns represent a stationary process for volatility analysis.
+*   **Causality:** We identify **Associated Triggers**. While the Bayesian model identifies a structural break on Dec 16, 2010, we define the Arab Spring as the primary *association* based on temporal proximity, acknowledging that global inventory levels also contribute to variance.
 
-## 2. Stakeholder Communication Plan
-To ensure actionable intelligence, results will be communicated via the following channels:
-
-| Stakeholder | Channel | Format | Frequency |
-| :--- | :--- | :--- | :--- |
-| **Investors** | Interactive Dashboard | Risk-Volatility Heatmaps & Sharpe Ratio Analysis | Daily/Real-time |
-| **Policymakers** | Executive Summary Reports | Policy Briefs on Energy Security & Sanction Impacts | Quarterly |
-| **Energy Companies** | Direct API Access | JSON Feeds of Change Point Probabilities for Supply Chain Ops | Real-time |
-
-## 3. Communication Formats
-1.  **Technical Blog:** Deep-dive into Bayesian math and MCMC convergence for the Data Science team.
-2.  **Executive Memo:** 2-page summary highlighting % shifts in price and risk for C-suite decision-makers.
-3.  **Live Dashboard:** React-based tool for "What-If" scenario scrubbing.
+## 3. Error Handling & Code Quality
+*   **Backend:** Flask APIs include `try/except` blocks to handle missing data or empty datasets gracefully.
+*   **Validation:** Input CSVs are parsed with `mixed` date formats to prevent runtime crashes.
