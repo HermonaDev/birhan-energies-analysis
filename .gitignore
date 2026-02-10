@@ -4,3 +4,8 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 data/raw/BrentOilPrices.csv
+data/raw/external_events.csv
+node_modules/
+dist/
+build/
+*.egg-info/
