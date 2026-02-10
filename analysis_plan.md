@@ -20,6 +20,16 @@ To identify significant geopolitical and economic "Change Points" in Brent Crude
 - **Interactive Dashboard:** A Flask-React tool for stakeholders to "scrub" through the timeline and see event highlights.
 
 ## 4. Assumptions and Limitations
-- **Assumption of Single/Multiple Breaks:** Our initial model assumes a structural break, but global markets may have dozens. We will start with a single switch-point model and evaluate if a multi-break model (Markov Switching) is required.
-- **Lag Effect:** We assume events have an immediate impact, though policy changes (OPEC cuts) often have a 30-60 day transmission lag into actual prices.
-- **Correlation vs. Causality:** A detected change point occurring on the same day as a Geopolitical event (e.g., 9/11) suggests a high correlation. However, without controlling for other variables (GDP, Dollar Strength, Inventory levels), we identify these as "Associated Causes" rather than "Proven Causality."
+# Birhan Energies: Strategic Framework
+
+## 4.1. Explicit Assumptions & Limitations
+*   **Linear Mean Assumption:** Our model assumes a "step function" change in price levels. It may miss subtle non-linear drifts between regimes.
+*   **Data Caveats:** The dataset does not account for the **US Dollar Index (DXY)** or **Global Inventory levels**, which are major latent variables in oil pricing.
+
+## 4.2. Correlation vs. Causality
+*   **The Model's Role:** Bayesian Change Point Analysis identifies *when* the distribution shifted. It does not "know" why.
+*   **Association Logic:** We associate the 2010 shift with the Arab Spring due to temporal proximity. We define this as a **Probabilistic Association**, acknowledging that while the war was the primary driver, macro-demand also contributed to the final price level.
+
+## 4.3. Communication Strategy
+*   **Investors:** Bi-weekly volatility risk summaries.
+*   **Policymakers:** Annual regime stability reports.
